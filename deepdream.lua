@@ -35,10 +35,10 @@ function make_step(net, img, end_layer,clip,step_size, jitter)
     if cuda then
         local cuda_img = img:cuda():view(1,img:size(1),img:size(2),img:size(3))
         dst = net:forward(cuda_img)
-        g = net:backward(cuda_img,dst):float():squeeze()
+        g = net:updateGradInput(cuda_img,dst):float():squeeze()
     else
         dst = net:forward(img)
-        g = net:backward(img,dst)
+        g = net:updateGradInput(img,dst)
     end
     -- apply normalized ascent step to the input image
     img:add(g:mul(step_size/torch.abs(g):mean()))
