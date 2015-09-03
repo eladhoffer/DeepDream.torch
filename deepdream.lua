@@ -21,10 +21,9 @@ function reduceNet(full_net,end_layer)
     return net
 end
 
-function make_step(net, img, end_layer,clip,step_size, jitter)
+function make_step(net, img, clip,step_size, jitter)
     local step_size = step_size or 0.01
     local jitter = jitter or 32
-    local layer = layer or 15
     local clip = clip
     if clip == nil then clip = true end
 
@@ -83,7 +82,7 @@ function deepdream(net, base_img, iter_n, octave_n, octave_scale, end_layer, cli
             src:add(detail)
         end
         for i=1,iter_n do
-            src = make_step(net, src, end_layer, clip)
+            src = make_step(net, src, clip)
             if visualize then
                 -- visualization
                 vis = torch.mul(src, Normalization.std):add(Normalization.mean)
